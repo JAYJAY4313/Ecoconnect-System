@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoConnect · Track</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ── reset & base ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f4f7fa;
+            color: #1e2b3c;
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* ── PAGES ── */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── LOGIN CARD ── */
+        .auth-card {
+            background: white;
+            max-width: 500px;
+            width: 100%;
+            border-radius: 48px;
+            padding: 40px 36px;
+            margin: 0 auto;
+            box-shadow: 0 20px 48px rgba(0, 20, 10, 0.12);
+            border: 1px solid #eaf0f5;
+        }
+
+        .auth-card .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #0b5e3b;
+            margin-bottom: 8px;
+        }
+        .auth-card .logo i {
+            font-size: 2.2rem;
+            color: #2b8c5e;
+        }
+
+        .auth-card h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 4px 0 8px;
+        }
+        .auth-card .sub {
+            color: #435a6e;
+            margin-bottom: 28px;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            color: #1e2b3c;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid #dce4ec;
+            border-radius: 60px;
+            font-size: 1rem;
+            background: #fafcfe;
+            transition: 0.2s;
+            outline: none;
+        }
+        .form-group input:focus {
+            border-color: #0b5e3b;
+            box-shadow: 0 0 0 3px rgba(11, 94, 59, 0.15);
+            background: white;
+        }
+
+        .btn-primary {
+            background: #0b5e3b;
+            border: none;
+            padding: 16px 28px;
+            border-radius: 60px;
+            font-weight: 700;
+            color: white;
+            font-size: 1.1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 18px rgba(11, 94, 59, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .btn-primary:hover {
+            background: #0a4f32;
+            transform: scale(1.01);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1.5px solid #dce4ec;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #3e5569;
+            font-size: 1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .btn-secondary:hover {
+            background: #f0f4f8;
+            border-color: #b8ccda;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 28px 0 18px;
+            color: #6b7f92;
+            font-size: 0.9rem;
+        }
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #dce4ec;
+        }
+
+        .social-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 60px;
+            border: 1.5px solid #dce4ec;
+            background: white;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.15s;
+            margin-bottom: 12px;
+        }
+        .social-btn:hover {
+            background: #f6fafd;
+            border-color: #b8ccda;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            color: #3e5569;
+        }
+        .auth-footer a {
+            color: #0b5e3b;
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px dotted #0b5e3b60;
+            cursor: pointer;
+        }
+        .auth-footer a:hover {
+            border-bottom: 2px solid #0b5e3b;
+        }
+
+        .toggle-password {
+            position: relative;
+        }
+        .toggle-password i {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7f92;
+            cursor: pointer;
+        }
+
+        /* ── DASHBOARD ── */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0 24px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #dce4ec;
+        }
+
+        .logo-dash {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #0b5e3b;
+        }
+        .logo-dash i {
+            font-size: 2rem;
+            color: #2b8c5e;
+        }
+
+        .user-greeting {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: white;
+            padding: 8px 20px 8px 16px;
+            border-radius: 60px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            border: 1px solid #eaf0f5;
+        }
+        .user-greeting i {
+            font-size: 2rem;
+            color: #0b5e3b;
+        }
+        .user-greeting span {
+            font-weight: 600;
+        }
+        .user-greeting .badge {
+            background: #eaf3ed;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #0b5e3b;
+        }
+
+        .sign-out-btn {
+            background: transparent;
+            border: 1px solid #dce4ec;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-weight: 600;
+            color: #3e5569;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sign-out-btn:hover {
+            background: #f0f4f8;
+            border-color: #b8ccda;
+        }
+
+        .welcome-hero {
+            background: linear-gradient(145deg, #eaf3ed, #d4e6dd);
+            border-radius: 48px;
+            padding: 40px 36px;
+            margin: 32px 0 28px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .welcome-hero h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+        }
+        .welcome-hero h1 i {
+            color: #0b5e3b;
+            margin-right: 8px;
+        }
+        .welcome-hero p {
+            font-size: 1.1rem;
+            color: #2c4a3a;
+            max-width: 500px;
+            margin-top: 6px;
+        }
+        .welcome-hero .cta-small {
+            background: #0b5e3b;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(11, 94, 59, 0.25);
+            transition: 0.2s;
+        }
+        .welcome-hero .cta-small:hover {
+            background: #0a4f32;
+            transform: scale(1.02);
+        }
+
+        .status-bar {
+            background: white;
+            border-radius: 40px;
+            padding: 18px 28px;
+            margin: 24px 0 10px;
+            border: 1px solid #edf2f6;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+        .status-bar .badge-light {
+            background: #eaf3ed;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #0b5e3b;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 40px 0 16px;
+            color: #0b3b27;
+        }
+        .section-title i {
+            color: #0b5e3b;
+            margin-right: 10px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 28px;
+            margin: 24px 0 40px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 32px;
+            padding: 30px 24px;
+            box-shadow: 0 8px 24px rgba(0, 20, 10, 0.04);
+            border: 1px solid #edf2f6;
+            transition: 0.2s;
+            cursor: default;
+            text-align: center;
+        }
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 32px rgba(11, 94, 59, 0.08);
+            border-color: #d4e6dd;
+        }
+        .service-card i {
+            font-size: 2.8rem;
+            color: #0b5e3b;
+            margin-bottom: 16px;
+            background: #eaf3ed;
+            padding: 16px;
+            border-radius: 60px;
+            display: inline-block;
+        }
+        .service-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+        .service-card p {
+            color: #435a6e;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .btn-service {
+            background: #eaf3ed;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #0b5e3b;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-service:hover {
+            background: #d4e6dd;
+        }
+
+        .extra-card {
+            background: white;
+            border-radius: 32px;
+            padding: 20px 28px;
+            border: 1px solid #edf2f6;
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .badge-light {
+            background: #eaf3ed;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #0b5e3b;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #dce4ec;
+            text-align: center;
+            color: #4d657b;
+            font-size: 0.9rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .form-row .form-group {
+            flex: 1 1 180px;
+        }
+
+        /* ── MODAL OVERLAY ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            max-width: 480px;
+            width: 90%;
+            padding: 36px 32px 40px;
+            border-radius: 48px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-box h3 {
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+        }
+        .modal-box p {
+            color: #435a6e;
+            margin-bottom: 20px;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1.5px solid #dce4ec;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #3e5569;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-cancel:hover {
+            background: #f0f4f8;
+            border-color: #b8ccda;
+        }
+
+        /* ── TRACKING UI ── */
+        .track-container {
+            padding: 16px 0 8px;
+        }
+
+        .track-line-wrapper {
+            position: relative;
+            padding: 20px 0 30px;
+            margin: 8px 0;
+        }
+
+        .track-line {
+            position: relative;
+            width: 100%;
+            height: 4px;
+            background: #dce4ec;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .track-line .track-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: #0b5e3b;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.8s ease;
+        }
+
+        /* pickup dot (small) */
+        .track-dot {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #0b5e3b;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #0b5e3b;
+            z-index: 2;
+        }
+        .track-dot.pickup {
+            left: 0%;
+            width: 18px;
+            height: 18px;
+            background: #0b5e3b;
+        }
+        .track-dot.completion {
+            left: 100%;
+            width: 28px;
+            height: 28px;
+            background: #0b5e3b;
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px #0b5e3b;
+        }
+
+        /* truck icon */
+        .track-truck {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.2rem;
+            color: #0b5e3b;
+            z-index: 5;
+            left: 10%;
+            transition: left 1s ease;
+            filter: drop-shadow(0 2px 6px rgba(11, 94, 59, 0.3));
+        }
+
+        .track-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #3e5569;
+            padding: 0 4px;
+        }
+        .track-labels .pickup-label {
+            text-align: left;
+        }
+        .track-labels .completion-label {
+            text-align: right;
+        }
+
+        .track-status-text {
+            margin-top: 16px;
+            font-weight: 600;
+            color: #0b5e3b;
+            font-size: 1.05rem;
+        }
+
+        @media (max-width: 500px) {
+            .track-truck {
+                font-size: 1.8rem;
+            }
+            .track-dot.completion {
+                width: 22px;
+                height: 22px;
+            }
+            .modal-box {
+                padding: 28px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- ===================== PAGE 1: LOGIN ===================== -->
+        <div id="loginPage" class="page active">
+            <div class="auth-card">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i> EcoConnect
+                </div>
+                <h2>Welcome Back</h2>
+                <p class="sub">Sign in to book waste management services in Ogbomoso.</p>
+
+                <div class="form-group">
+                    <label for="emailSignin"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="emailSignin" placeholder="you@example.com" value="jomiloju@ecoconnect.ng" />
+                </div>
+                <div class="form-group toggle-password">
+                    <label for="passwordSignin"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="passwordSignin" placeholder="••••••••" value="password123" />
+                    <i class="fas fa-eye" id="toggleSigninPass"></i>
+                </div>
+                <div style="text-align:right; margin:-10px 0 18px;">
+                    <a href="#" style="color:#0b5e3b; font-size:0.9rem;">Forgot password?</a>
+                </div>
+                <button class="btn-primary" id="signinBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+
+                <div class="divider">or</div>
+
+                <button class="btn-secondary" id="createAccountBtn"><i class="fas fa-user-plus"></i> Create New Account</button>
+
+                <div class="divider">or continue with</div>
+                <button class="social-btn" id="googleLoginBtn"><i class="fab fa-google"></i> Continue with Google</button>
+                <button class="social-btn" id="appleLoginBtn"><i class="fab fa-apple"></i> Continue with Apple</button>
+            </div>
+        </div>
+
+        <!-- ===================== PAGE 2: SIGN UP ===================== -->
+        <div id="signupPage" class="page">
+            <div class="auth-card" style="max-width: 600px;">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i> EcoConnect
+                </div>
+                <h2>Create Your Account</h2>
+                <p class="sub">Fill in your details to get started with clean waste management.</p>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName"><i class="fas fa-user"></i> First Name</label>
+                        <input type="text" id="firstName" placeholder="Jomiloju" />
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName"><i class="fas fa-user"></i> Last Name</label>
+                        <input type="text" id="lastName" placeholder="Ogunleye" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="emailSignup"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="emailSignup" placeholder="jomiloju@example.com" />
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneSignup"><i class="fas fa-phone-alt"></i> Phone Number</label>
+                    <input type="tel" id="phoneSignup" placeholder="080 1234 5678" />
+                </div>
+
+                <div class="form-group">
+                    <label for="addressSignup"><i class="fas fa-map-pin"></i> Residential Address</label>
+                    <input type="text" id="addressSignup" placeholder="hyaganku, Ogbomoso, Oyo State" />
+                </div>
+
+                <div class="form-group toggle-password">
+                    <label for="passwordSignup"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="passwordSignup" placeholder="•••••••• (min 6 characters)" />
+                    <i class="fas fa-eye" id="toggleSignupPass"></i>
+                </div>
+
+                <button class="btn-primary" id="signupSubmitBtn"><i class="fas fa-user-check"></i> Create Account</button>
+
+                <div style="margin-top: 16px; text-align: center;">
+                    <a href="#" id="backToLoginLink" style="color:#0b5e3b; font-weight:600; text-decoration: none; border-bottom:1px dotted #0b5e3b60;">← Back to Sign In</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== PAGE 3: DASHBOARD ===================== -->
+        <div id="dashboardPage" class="page">
+            <nav class="navbar">
+                <div class="logo-dash">
+                    <i class="fas fa-leaf"></i> EcoConnect
+                </div>
+                <div class="user-greeting">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="dashboardUserName">Jomiloju</span>
+                    <span class="badge"><i class="fas fa-check-circle"></i> Verified</span>
+                </div>
+                <button class="sign-out-btn" id="signOutBtn"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+            </nav>
+
+            <div class="welcome-hero">
+                <div>
+                    <h1><i class="fas fa-hand-peace"></i> Hi dear, what do you need today?</h1>
+                    <p>We're here to help you keep Ogbomoso clean. Choose a service below.</p>
+                </div>
+                <div>
+                    <button class="cta-small" id="quickBookBtn"><i class="fas fa-calendar-plus"></i> Quick Booking</button>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <span><i class="fas fa-truck" style="color:#0b5e3b;"></i> <strong>Next Collection:</strong> Fri, 24 May · 8:00–10:00 AM</span>
+                <span class="badge-light"><i class="fas fa-circle" style="color:#2b8c5e; font-size:0.6rem;"></i> On The Way</span>
+                <span><i class="fas fa-wallet" style="color:#0b5e3b;"></i> Wallet: N1,200</span>
+            </div>
+
+            <h2 class="section-title"><i class="fas fa-concierge-bell"></i> Our Services — What We Offer</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-home"></i>
+                    <h3>Household Waste</h3>
+                    <p>Regular pickup for homes and residential estates.</p>
+                    <button class="btn-service book-service-btn" data-service="household"><i class="fas fa-arrow-right"></i> Book Now</button>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-store"></i>
+                    <h3>Commercial Waste</h3>
+                    <p>Scheduled pickups for offices, shops & institutions.</p>
+                    <button class="btn-service book-service-btn" data-service="commercial"><i class="fas fa-arrow-right"></i> Book Now</button>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-recycle"></i>
+                    <h3>Special Waste</h3>
+                    <p>E-waste, bulky items, construction debris, and hazardous materials.</p>
+                    <button class="btn-service book-service-btn" data-service="special"><i class="fas fa-arrow-right"></i> Book Now</button>
+                </div>
+                <div class="service-card" style="background:#eaf3ed; border-color:#c6ddd1;">
+                    <i class="fas fa-satellite-dish" style="background:white;"></i>
+                    <h3>Real‑time Tracking</h3>
+                    <p>Track your collection live from pickup to completion.</p>
+                    <button class="btn-service" style="background:white;" id="trackBtn"><i class="fas fa-map-marked-alt"></i> Track</button>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-hospital"></i>
+                    <h3>Medical Waste</h3>
+                    <p>Safe disposal of clinical, pharmaceutical and biohazard waste.</p>
+                    <button class="btn-service book-service-btn" data-service="medical"><i class="fas fa-arrow-right"></i> Book Now</button>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-dumpster"></i>
+                    <h3>Bulk & Construction</h3>
+                    <p>Large volume waste, renovation debris, and commercial bulk pickup.</p>
+                    <button class="btn-service book-service-btn" data-service="bulk"><i class="fas fa-arrow-right"></i> Book Now</button>
+                </div>
+            </div>
+
+            <div class="extra-card">
+                <div><i class="fas fa-star" style="color:#f5b342;"></i> <strong>Rate your last service</strong> — Driver was punctual and friendly.</div>
+                <div>
+                    <span class="badge-light" style="margin-right:8px;">⭐ 5.0</span>
+                    <button class="btn-service" style="padding:6px 20px;" id="rateBtn">Rate Now</button>
+                </div>
+            </div>
+
+            <div class="footer-note">
+                <i class="fas fa-leaf" style="color:#0b5e3b;"></i> Together, let's build a cleaner Ogbomoso.
+                <span style="margin-left:16px;">📞 0901 234 5678</span>
+            </div>
+        </div>
+
+        <!-- ===================== BOOKING FORM PAGE ===================== -->
+        <div id="bookingPage" class="page">
+            <div class="auth-card" style="max-width: 600px;">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i> EcoConnect
+                </div>
+                <h2 id="bookingServiceTitle">Book Household Waste</h2>
+                <p class="sub">Enter your details to confirm the booking.</p>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bookFirstName"><i class="fas fa-user"></i> First Name</label>
+                        <input type="text" id="bookFirstName" placeholder="Jomiloju" />
+                    </div>
+                    <div class="form-group">
+                        <label for="bookLastName"><i class="fas fa-user"></i> Last Name</label>
+                        <input type="text" id="bookLastName" placeholder="Ogunleye" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="bookAddress"><i class="fas fa-map-pin"></i> Residential Address</label>
+                    <input type="text" id="bookAddress" placeholder="hyaganku, Ogbomoso, Oyo State" />
+                </div>
+
+                <div class="form-group">
+                    <label for="bookPhone"><i class="fas fa-phone-alt"></i> Phone Number</label>
+                    <input type="tel" id="bookPhone" placeholder="080 1234 5678" />
+                </div>
+
+                <button class="btn-primary" id="submitBookingBtn"><i class="fas fa-check-circle"></i> Confirm Booking</button>
+
+                <div style="margin-top: 16px; text-align: center;">
+                    <a href="#" id="backToDashboardFromBooking" style="color:#0b5e3b; font-weight:600; text-decoration: none; border-bottom:1px dotted #0b5e3b60;">← Back to Services</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===================== TRACKING MODAL ===================== -->
+    <div class="modal-overlay" id="trackModal">
+        <div class="modal-box">
+            <h3><i class="fas fa-map-marked-alt" style="color:#0b5e3b;"></i> Real-time Tracking</h3>
+            <p>Your waste collection is on the way.</p>
+
+            <div class="track-container">
+                <div class="track-line-wrapper">
+                    <!-- line -->
+                    <div class="track-line">
+                        <div class="track-progress" id="trackProgress" style="width:0%;"></div>
+                        <!-- pickup dot (small) -->
+                        <div class="track-dot pickup" style="left:0%;"></div>
+                        <!-- completion dot (big) -->
+                        <div class="track-dot completion" style="left:100%;"></div>
+                        <!-- truck icon -->
+                        <div class="track-truck" id="trackTruck" style="left:10%;">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                    </div>
+                    <div class="track-labels">
+                        <span class="pickup-label"><i class="fas fa-circle" style="color:#0b5e3b; font-size:0.6rem;"></i> Pickup</span>
+                        <span class="completion-label"><i class="fas fa-circle" style="color:#0b5e3b; font-size:0.9rem;"></i> Completion</span>
+                    </div>
+                </div>
+                <div class="track-status-text" id="trackStatusText">🚛 Truck is on its way...</div>
+                <button class="btn-cancel" id="closeTrackModal" style="margin-top:14px;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ── DOM refs ──
+            const loginPage = document.getElementById('loginPage');
+            const signupPage = document.getElementById('signupPage');
+            const dashboardPage = document.getElementById('dashboardPage');
+            const bookingPage = document.getElementById('bookingPage');
+            const trackModal = document.getElementById('trackModal');
+            const trackProgress = document.getElementById('trackProgress');
+            const trackTruck = document.getElementById('trackTruck');
+            const trackStatusText = document.getElementById('trackStatusText');
+            const closeTrackModalBtn = document.getElementById('closeTrackModal');
+
+            const signinBtn = document.getElementById('signinBtn');
+            const createAccountBtn = document.getElementById('createAccountBtn');
+            const signupSubmitBtn = document.getElementById('signupSubmitBtn');
+            const backToLoginLink = document.getElementById('backToLoginLink');
+            const signOutBtn = document.getElementById('signOutBtn');
+            const dashboardUserName = document.getElementById('dashboardUserName');
+            const backToDashboardFromBooking = document.getElementById('backToDashboardFromBooking');
+            const submitBookingBtn = document.getElementById('submitBookingBtn');
+            const bookingServiceTitle = document.getElementById('bookingServiceTitle');
+            const trackBtn = document.getElementById('trackBtn');
+
+            // Social login buttons
+            const googleLoginBtn = document.getElementById('googleLoginBtn');
+            const appleLoginBtn = document.getElementById('appleLoginBtn');
+
+            // Booking form fields
+            const bookFirstName = document.getElementById('bookFirstName');
+            const bookLastName = document.getElementById('bookLastName');
+            const bookAddress = document.getElementById('bookAddress');
+            const bookPhone = document.getElementById('bookPhone');
+
+            // Toggle password
+            const toggleSigninPass = document.getElementById('toggleSigninPass');
+            const passInput = document.getElementById('passwordSignin');
+            const toggleSignupPass = document.getElementById('toggleSignupPass');
+            const passSignupInput = document.getElementById('passwordSignup');
+
+            // ── State ──
+            let selectedService = 'Household Waste';
+            let bookingTimer = null;
+            let trackAnimationTimer = null;
+
+            // ── Toggle password visibility ──
+            toggleSigninPass.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (passInput.type === 'password') {
+                    passInput.type = 'text';
+                    toggleSigninPass.classList.remove('fa-eye');
+                    toggleSigninPass.classList.add('fa-eye-slash');
+                } else {
+                    passInput.type = 'password';
+                    toggleSigninPass.classList.remove('fa-eye-slash');
+                    toggleSigninPass.classList.add('fa-eye');
+                }
+            });
+
+            toggleSignupPass.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (passSignupInput.type === 'password') {
+                    passSignupInput.type = 'text';
+                    toggleSignupPass.classList.remove('fa-eye');
+                    toggleSignupPass.classList.add('fa-eye-slash');
+                } else {
+                    passSignupInput.type = 'password';
+                    toggleSignupPass.classList.remove('fa-eye-slash');
+                    toggleSignupPass.classList.add('fa-eye');
+                }
+            });
+
+            // ── Navigate to Sign Up ──
+            createAccountBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginPage.classList.remove('active');
+                signupPage.classList.add('active');
+            });
+
+            // ── Back to Login from Sign Up ──
+            backToLoginLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                signupPage.classList.remove('active');
+                loginPage.classList.add('active');
+            });
+
+            // ── SIGN IN ──
+            signinBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('emailSignin').value.trim();
+                const pass = passInput.value.trim();
+                if (!email || !pass) {
+                    alert('Please enter your email and password.');
+                    return;
+                }
+                dashboardUserName.textContent = 'Jomiloju';
+                loginPage.classList.remove('active');
+                dashboardPage.classList.add('active');
+            });
+
+            // ── SIGN UP SUBMIT ──
+            signupSubmitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const firstName = document.getElementById('firstName').value.trim();
+                const lastName = document.getElementById('lastName').value.trim();
+                const email = document.getElementById('emailSignup').value.trim();
+                const phone = document.getElementById('phoneSignup').value.trim();
+                const address = document.getElementById('addressSignup').value.trim();
+                const password = passSignupInput.value.trim();
+
+                if (!firstName || !lastName || !email || !phone || !address || !password) {
+                    alert('Please fill in all fields to create your account.');
+                    return;
+                }
+                if (password.length < 6) {
+                    alert('Password must be at least 6 characters.');
+                    return;
+                }
+
+                dashboardUserName.textContent = firstName;
+                signupPage.classList.remove('active');
+                dashboardPage.classList.add('active');
+                alert(`✅ Account created successfully!\nWelcome ${firstName} ${lastName}!`);
+            });
+
+            // ── SIGN OUT ──
+            signOutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Sign out and return to the login page?')) {
+                    dashboardPage.classList.remove('active');
+                    loginPage.classList.add('active');
+                    passInput.value = '';
+                    passSignupInput.value = '';
+                }
+            });
+
+            // ── SOCIAL LOGIN: Google ──
+            googleLoginBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                showSocialLoginModal('Google', 'google');
+            });
+
+            // ── SOCIAL LOGIN: Apple ──
+            appleLoginBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                showSocialLoginModal('Apple', 'apple');
+            });
+
+            // ── Social Login Modal ──
+            function showSocialLoginModal(provider, providerClass) {
+                const iconClass = providerClass === 'google' ? 'fab fa-google' : 'fab fa-apple';
+                const iconColor = providerClass === 'google' ? 'color:#ea4335;' : 'color:#1e1e1e;';
+
+                // We'll use a simple alert for demo since we already have a modal system
+                // But we can use the existing modal overlay
+                const modalContent = document.getElementById('modalContent');
+                if (!modalContent) {
+                    // If no modalContent, fallback to alert
+                    alert(`🔐 ${provider} login would require your ${provider} credentials. (Demo)`);
+                    return;
+                }
+                // For simplicity, we'll just use alert as requested earlier
+                alert(`🔐 ${provider} authentication (demo). In production, OAuth would be triggered.`);
+            }
+
+            // ── BOOKING: Open booking form from service cards ──
+            document.querySelectorAll('.book-service-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const service = this.getAttribute('data-service');
+                    const serviceMap = {
+                        household: 'Household Waste',
+                        commercial: 'Commercial Waste',
+                        special: 'Special Waste',
+                        medical: 'Medical Waste',
+                        bulk: 'Bulk & Construction'
+                    };
+                    selectedService = serviceMap[service] || service;
+                    bookingServiceTitle.textContent = `Book ${selectedService}`;
+
+                    const currentName = dashboardUserName.textContent;
+                    if (currentName && currentName !== 'Jomiloju') {
+                        bookFirstName.value = currentName;
+                    } else {
+                        bookFirstName.value = 'Jomiloju';
+                    }
+                    bookLastName.value = '';
+                    bookAddress.value = '';
+                    bookPhone.value = '';
+
+                    dashboardPage.classList.remove('active');
+                    bookingPage.classList.add('active');
+                });
+            });
+
+            // ── Back to Dashboard from Booking ──
+            backToDashboardFromBooking.addEventListener('click', function(e) {
+                e.preventDefault();
+                bookingPage.classList.remove('active');
+                dashboardPage.classList.add('active');
+                if (bookingTimer) {
+                    clearTimeout(bookingTimer);
+                    bookingTimer = null;
+                }
+            });
+
+            // ── SUBMIT BOOKING ──
+            submitBookingBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const firstName = bookFirstName.value.trim();
+                const lastName = bookLastName.value.trim();
+                const address = bookAddress.value.trim();
+                const phone = bookPhone.value.trim();
+
+                if (!firstName || !lastName || !address || !phone) {
+                    alert('Please fill in all fields to complete your booking.');
+                    return;
+                }
+
+                alert(`✅ Booking confirmed for ${firstName} ${lastName}!\n${selectedService}\nAddress: ${address}\nPhone: ${phone}`);
+                bookingPage.classList.remove('active');
+                dashboardPage.classList.add('active');
+            });
+
+            // ── TRACK BUTTON: Show tracking modal with animation ──
+            trackBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                openTrackModal();
+            });
+
+            function openTrackModal() {
+                // Reset progress
+                trackProgress.style.width = '0%';
+                trackTruck.style.left = '10%';
+                trackStatusText.textContent = '🚛 Truck is on its way...';
+
+                trackModal.classList.add('active');
+
+                // Animate truck from 10% to 90% over 3 seconds
+                let progress = 10;
+                const step = 0.8; // % per 30ms
+                const interval = 30;
+                let elapsed = 0;
+                const maxProgress = 90;
+
+                if (trackAnimationTimer) {
+                    clearInterval(trackAnimationTimer);
+                    trackAnimationTimer = null;
+                }
+
+                trackAnimationTimer = setInterval(function() {
+                    progress += step;
+                    elapsed += interval;
+                    if (progress >= maxProgress) {
+                        progress = maxProgress;
+                        clearInterval(trackAnimationTimer);
+                        trackAnimationTimer = null;
+                        trackStatusText.textContent = '✅ Arrived at completion point!';
+                        trackProgress.style.width = '100%';
+                        trackTruck.style.left = '90%';
+                        return;
+                    }
+                    trackProgress.style.width = progress + '%';
+                    trackTruck.style.left = progress + '%';
+
+                    // Update status text
+                    if (progress < 30) {
+                        trackStatusText.textContent = '🚛 Picking up waste...';
+                    } else if (progress < 60) {
+                        trackStatusText.textContent = '🚛 En route to disposal facility...';
+                    } else {
+                        trackStatusText.textContent = '🚛 Almost there...';
+                    }
+                }, interval);
+            }
+
+            // ── Close Track Modal ──
+            closeTrackModalBtn.addEventListener('click', function() {
+                trackModal.classList.remove('active');
+                if (trackAnimationTimer) {
+                    clearInterval(trackAnimationTimer);
+                    trackAnimationTimer = null;
+                }
+            });
+
+            // Close modal on outside click
+            trackModal.addEventListener('click', function(e) {
+                if (e.target === trackModal) {
+                    trackModal.classList.remove('active');
+                    if (trackAnimationTimer) {
+                        clearInterval(trackAnimationTimer);
+                        trackAnimationTimer = null;
+                    }
+                }
+            });
+
+            // ── Quick booking ──
+            document.getElementById('quickBookBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('📅 Quick booking wizard opened (demo). Select date & time.');
+            });
+
+            // ── Rate button ──
+            document.getElementById('rateBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('⭐ Rate your last service (demo). Thank you for helping others!');
+            });
+
+            // ── Forgot password ──
+            document.querySelector('a[href="#"]')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('🔑 Password reset link would be sent to your email. (demo)');
+            });
+
+            // ── Social buttons (fallback) ──
+            document.querySelectorAll('.social-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const provider = this.innerText.trim();
+                    alert(`🔐 ${provider} authentication (demo). In production, OAuth would be triggered.`);
+                });
+            });
+
+        })();
+    </script>
+</body>
+</html>
